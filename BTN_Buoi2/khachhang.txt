@@ -1,0 +1,3 @@
+Nguyen Van A|0123456789|2|1|Avengers|Phong 1|20:00|200000
+Tran Thi B|0987654321|1|0|Inception|Phong 2|18:00|100000
+Le Van C|0912345678|3|2|Avatar|Phong 3|21:00|350000

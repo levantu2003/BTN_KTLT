@@ -4,8 +4,10 @@
 
 #define MAX_KHACHHANG 100
 #define MAX_LEN 100
+#define GIA_VE_NGUOI_LON 40000
+#define GIA_VE_TRE_EM 20000
 
-// Định nghĩa cấu trúc KhachHang
+
 typedef struct {
     char hoTen[MAX_LEN];
     char soDienThoai[15];
@@ -17,11 +19,15 @@ typedef struct {
     int tienPhaiTra;
 } KhachHang;
 
-// Khai báo mảng lưu danh sách khách hàng
+
 KhachHang dskh[MAX_KHACHHANG];
 int soLuongKhachHang = 0;
 
-// Hàm đọc danh sách khách hàng từ file
+
+void tinhTienPhaiTra(KhachHang *kh) {
+    kh->tienPhaiTra = (kh->soVeNguoiLon * GIA_VE_NGUOI_LON) + (kh->soVeTreEm * GIA_VE_TRE_EM);
+}
+
 void docDanhSachKhachHang(const char *tenFile) {
     FILE *file = fopen(tenFile, "r");
     if (file == NULL) {
@@ -30,7 +36,6 @@ void docDanhSachKhachHang(const char *tenFile) {
         return;
     }
 
-    // Đọc từng dòng trong file
     while (fscanf(file, "%[^|]|%[^|]|%d|%d|%[^|]|%[^|]|%[^|]|%d\n",
                   dskh[soLuongKhachHang].hoTen,
                   dskh[soLuongKhachHang].soDienThoai,
@@ -40,6 +45,7 @@ void docDanhSachKhachHang(const char *tenFile) {
                   dskh[soLuongKhachHang].phongChieu,
                   dskh[soLuongKhachHang].xuatChieu,
                   &dskh[soLuongKhachHang].tienPhaiTra) != EOF) {
+        tinhTienPhaiTra(&dskh[soLuongKhachHang]);
         soLuongKhachHang++;
         if (soLuongKhachHang >= MAX_KHACHHANG) {
             printf("Danh sach khach hang da day.\n");
@@ -50,7 +56,7 @@ void docDanhSachKhachHang(const char *tenFile) {
     fclose(file);
 }
 
-// Hàm xuất danh sách khách hàng ra màn hình
+
 void xuatDanhSachKhachHang() {
     if (soLuongKhachHang == 0) {
         printf("Danh sach khach hang rong.\n");
@@ -82,14 +88,14 @@ int main() {
         printf("Chon tuyen (1-3): ");
         scanf("%d", &luaChon);
 
-        // Xóa ký tự newline còn lại
+
         while (getchar() != '\n');
 
         switch (luaChon) {
             case 1:
                 printf("Nhap ten file (bao gom duong dan neu can): ");
                 fgets(tenFile, sizeof(tenFile), stdin);
-                tenFile[strcspn(tenFile, "\n")] = 0; // Xóa ký tự newline
+                tenFile[strcspn(tenFile, "\n")] = 0;
                 docDanhSachKhachHang(tenFile);
                 break;
             case 2:

@@ -122,10 +122,37 @@ void xuatDoanhThuTheoPhim() {
     }
 }
 
+// Hàm xuất thông tin khách hàng theo phòng chiếu và xuất chiếu
+void xuatKhachHangTheoPhongVaXuat(const char *phongChieu, const char *xuatChieu) {
+    int found = 0;
+    for (int i = 0; i < soLuongKhachHang; i++) {
+        if (strcmp(dskh[i].phongChieu, phongChieu) == 0 && strcmp(dskh[i].xuatChieu, xuatChieu) == 0) {
+            if (!found) {
+                printf("\nDanh sach khach hang dat ve cho phong '%s' va xuat chieu '%s':\n", phongChieu, xuatChieu);
+                found = 1;
+            }
+            printf("\nKhach hang %d:\n", i + 1);
+            printf("Ho va Ten: %s\n", dskh[i].hoTen);
+            printf("So Dien Thoai: %s\n", dskh[i].soDienThoai);
+            printf("So Ve Nguoi Lon: %d\n", dskh[i].soVeNguoiLon);
+            printf("So Ve Tre Em: %d\n", dskh[i].soVeTreEm);
+            printf("Ten Phim: %s\n", dskh[i].tenPhim);
+            printf("Phong Chieu: %s\n", dskh[i].phongChieu);
+            printf("Xuat Chieu: %s\n", dskh[i].xuatChieu);
+            printf("Tien Phai Tra: %d VND\n", dskh[i].tienPhaiTra);
+        }
+    }
+    if (!found) {
+        printf("Khong co khach hang dat ve cho phong '%s' va xuat chieu '%s'.\n", phongChieu, xuatChieu);
+    }
+}
+
 // Hàm chính
 int main() {
     int luaChon;
     char tenFile[MAX_LEN];
+    char phongChieu[MAX_LEN];
+    char xuatChieu[MAX_LEN];
 
     do {
         printf("\n===== QUAN LY DAT VE RAP CHIEU PHIM =====\n");
@@ -133,8 +160,9 @@ int main() {
         printf("2. Xem danh sach khach hang\n");
         printf("3. Xem tong doanh thu\n");
         printf("4. Xem doanh thu theo tung phim\n");
-        printf("5. Thoat\n");
-        printf("Chon tuyen (1-5): ");
+        printf("5. Xem thong tin khach hang theo phong chieu va xuat chieu\n");
+        printf("6. Thoat\n");
+        printf("Chon tuyen (1-6): ");
         scanf("%d", &luaChon);
 
         // Xóa ký tự newline còn lại
@@ -157,13 +185,22 @@ int main() {
                 xuatDoanhThuTheoPhim();
                 break;
             case 5:
+                printf("Nhap phong chieu: ");
+                fgets(phongChieu, sizeof(phongChieu), stdin);
+                phongChieu[strcspn(phongChieu, "\n")] = 0; // Xóa ký tự newline
+                printf("Nhap xuat chieu: ");
+                fgets(xuatChieu, sizeof(xuatChieu), stdin);
+                xuatChieu[strcspn(xuatChieu, "\n")] = 0; // Xóa ký tự newline
+                xuatKhachHangTheoPhongVaXuat(phongChieu, xuatChieu);
+                break;
+            case 6:
                 printf("Thoat chuong trinh.\n");
                 break;
             default:
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 5);
+    } while (luaChon != 6);
 
     return 0;
 }

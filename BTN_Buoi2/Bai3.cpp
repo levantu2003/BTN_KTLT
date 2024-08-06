@@ -164,6 +164,26 @@ void sapXepDanhSachKhachHangTheoHoTen() {
     }
 }
 
+// Hàm tìm kiếm nhị phân (Binary Search) để tìm khách hàng theo họ tên
+int timKhachHangTheoHoTen(const char *hoTen) {
+    int left = 0;
+    int right = soLuongKhachHang - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        int cmp = strcmp(hoTen, dskh[mid].hoTen);
+
+        if (cmp == 0) {
+            return mid; // Tìm thấy khách hàng
+        } else if (cmp < 0) {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return -1; // Không tìm thấy khách hàng
+}
+
 // Hàm chính
 int main() {
     int luaChon;
@@ -179,8 +199,9 @@ int main() {
         printf("4. Xem doanh thu theo tung phim\n");
         printf("5. Xem thong tin khach hang theo phong chieu va xuat chieu\n");
         printf("6. Sap xep danh sach khach hang theo ho ten\n");
-        printf("7. Thoat\n");
-        printf("Chon tuyen (1-7): ");
+        printf("7. Tim khach hang theo ho ten\n");
+        printf("8. Thoat\n");
+        printf("Chon tuyen (1-8): ");
         scanf("%d", &luaChon);
 
         // Xóa ký tự newline còn lại
@@ -217,13 +238,39 @@ int main() {
                 xuatDanhSachKhachHang();
                 break;
             case 7:
+                {
+                    char hoTen[MAX_LEN];
+                    printf("Nhap ho ten khach hang can tim: ");
+                    fgets(hoTen, sizeof(hoTen), stdin);
+                    hoTen[strcspn(hoTen, "\n")] = 0; // Xóa ký tự newline
+
+                    // Sắp xếp danh sách khách hàng trước khi tìm kiếm
+                    sapXepDanhSachKhachHangTheoHoTen();
+
+                    int index = timKhachHangTheoHoTen(hoTen);
+                    if (index != -1) {
+                        printf("Khach hang tim thay:\n");
+                        printf("Ho va Ten: %s\n", dskh[index].hoTen);
+                        printf("So Dien Thoai: %s\n", dskh[index].soDienThoai);
+                        printf("So Ve Nguoi Lon: %d\n", dskh[index].soVeNguoiLon);
+                        printf("So Ve Tre Em: %d\n", dskh[index].soVeTreEm);
+                        printf("Ten Phim: %s\n", dskh[index].tenPhim);
+                        printf("Phong Chieu: %s\n", dskh[index].phongChieu);
+                        printf("Xuat Chieu: %s\n", dskh[index].xuatChieu);
+                        printf("Tien Phai Tra: %d VND\n", dskh[index].tienPhaiTra);
+                    } else {
+                        printf("Khach hang '%s' khong ton tai.\n", hoTen);
+                    }
+                }
+                break;
+            case 8:
                 printf("Thoat chuong trinh.\n");
                 break;
             default:
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 7);
+    } while (luaChon != 8);
 
     return 0;
 }

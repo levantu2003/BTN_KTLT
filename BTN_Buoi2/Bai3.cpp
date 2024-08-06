@@ -147,12 +147,12 @@ void xuatKhachHangTheoPhongVaXuat(const char *phongChieu, const char *xuatChieu)
     }
 }
 
-// Hàm sắp xếp danh sách khách hàng theo số tiền phải trả bằng thuật toán Selection Sort
-void selectionSortKhachHang() {
+// Hàm sắp xếp danh sách khách hàng theo họ tên (Selection Sort)
+void sapXepDanhSachKhachHangTheoHoTen() {
     for (int i = 0; i < soLuongKhachHang - 1; i++) {
         int minIndex = i;
         for (int j = i + 1; j < soLuongKhachHang; j++) {
-            if (dskh[j].tienPhaiTra < dskh[minIndex].tienPhaiTra) {
+            if (strcmp(dskh[j].hoTen, dskh[minIndex].hoTen) < 0) {
                 minIndex = j;
             }
         }
@@ -178,7 +178,7 @@ int main() {
         printf("3. Xem tong doanh thu\n");
         printf("4. Xem doanh thu theo tung phim\n");
         printf("5. Xem thong tin khach hang theo phong chieu va xuat chieu\n");
-        printf("6. Sap xep danh sach khach hang theo so tien phai tra\n");
+        printf("6. Sap xep danh sach khach hang theo ho ten\n");
         printf("7. Thoat\n");
         printf("Chon tuyen (1-7): ");
         scanf("%d", &luaChon);
@@ -212,7 +212,7 @@ int main() {
                 xuatKhachHangTheoPhongVaXuat(phongChieu, xuatChieu);
                 break;
             case 6:
-                selectionSortKhachHang();
+                sapXepDanhSachKhachHangTheoHoTen();
                 printf("Danh sach khach hang sau khi sap xep:\n");
                 xuatDanhSachKhachHang();
                 break;

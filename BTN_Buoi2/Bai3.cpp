@@ -7,7 +7,7 @@
 #define GIA_VE_NGUOI_LON 40000
 #define GIA_VE_TRE_EM 20000
 
-
+// Định nghĩa cấu trúc KhachHang
 typedef struct {
     char hoTen[MAX_LEN];
     char soDienThoai[15];
@@ -19,15 +19,16 @@ typedef struct {
     int tienPhaiTra;
 } KhachHang;
 
-
+// Khai báo mảng lưu danh sách khách hàng
 KhachHang dskh[MAX_KHACHHANG];
 int soLuongKhachHang = 0;
 
-
+// Hàm tính tiền phải trả cho mỗi khách hàng
 void tinhTienPhaiTra(KhachHang *kh) {
     kh->tienPhaiTra = (kh->soVeNguoiLon * GIA_VE_NGUOI_LON) + (kh->soVeTreEm * GIA_VE_TRE_EM);
 }
 
+// Hàm đọc danh sách khách hàng từ file
 void docDanhSachKhachHang(const char *tenFile) {
     FILE *file = fopen(tenFile, "r");
     if (file == NULL) {
@@ -45,7 +46,7 @@ void docDanhSachKhachHang(const char *tenFile) {
                   dskh[soLuongKhachHang].phongChieu,
                   dskh[soLuongKhachHang].xuatChieu,
                   &dskh[soLuongKhachHang].tienPhaiTra) != EOF) {
-        tinhTienPhaiTra(&dskh[soLuongKhachHang]);
+        tinhTienPhaiTra(&dskh[soLuongKhachHang]); // Tính tiền cho khách hàng
         soLuongKhachHang++;
         if (soLuongKhachHang >= MAX_KHACHHANG) {
             printf("Danh sach khach hang da day.\n");
@@ -56,7 +57,16 @@ void docDanhSachKhachHang(const char *tenFile) {
     fclose(file);
 }
 
+// Hàm tính tổng doanh thu
+int tinhTongDoanhThu() {
+    int tongDoanhThu = 0;
+    for (int i = 0; i < soLuongKhachHang; i++) {
+        tongDoanhThu += dskh[i].tienPhaiTra;
+    }
+    return tongDoanhThu;
+}
 
+// Hàm xuất danh sách khách hàng ra màn hình
 void xuatDanhSachKhachHang() {
     if (soLuongKhachHang == 0) {
         printf("Danh sach khach hang rong.\n");
@@ -84,31 +94,35 @@ int main() {
         printf("\n===== QUAN LY DAT VE RAP CHIEU PHIM =====\n");
         printf("1. Doc danh sach khach hang tu file\n");
         printf("2. Xem danh sach khach hang\n");
-        printf("3. Thoat\n");
-        printf("Chon tuyen (1-3): ");
+        printf("3. Xem tong doanh thu\n");
+        printf("4. Thoat\n");
+        printf("Chon tuyen (1-4): ");
         scanf("%d", &luaChon);
 
-
+        // Xóa ký tự newline còn lại
         while (getchar() != '\n');
 
         switch (luaChon) {
             case 1:
                 printf("Nhap ten file (bao gom duong dan neu can): ");
                 fgets(tenFile, sizeof(tenFile), stdin);
-                tenFile[strcspn(tenFile, "\n")] = 0;
+                tenFile[strcspn(tenFile, "\n")] = 0; // Xóa ký tự newline
                 docDanhSachKhachHang(tenFile);
                 break;
             case 2:
                 xuatDanhSachKhachHang();
                 break;
             case 3:
+                printf("Tong doanh thu: %d VND\n", tinhTongDoanhThu());
+                break;
+            case 4:
                 printf("Thoat chuong trinh.\n");
                 break;
             default:
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 3);
+    } while (luaChon != 4);
 
     return 0;
 }

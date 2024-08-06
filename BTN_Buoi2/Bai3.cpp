@@ -6,6 +6,7 @@
 #define MAX_LEN 100
 #define GIA_VE_NGUOI_LON 40000
 #define GIA_VE_TRE_EM 20000
+#define MAX_PHIM 100
 
 // Định nghĩa cấu trúc KhachHang
 typedef struct {
@@ -19,9 +20,17 @@ typedef struct {
     int tienPhaiTra;
 } KhachHang;
 
-// Khai báo mảng lưu danh sách khách hàng
+// Định nghĩa cấu trúc Phim
+typedef struct {
+    char tenPhim[MAX_LEN];
+    int tongDoanhThu;
+} Phim;
+
+// Khai báo mảng lưu danh sách khách hàng và phim
 KhachHang dskh[MAX_KHACHHANG];
+Phim dsPhim[MAX_PHIM];
 int soLuongKhachHang = 0;
+int soLuongPhim = 0;
 
 // Hàm tính tiền phải trả cho mỗi khách hàng
 void tinhTienPhaiTra(KhachHang *kh) {
@@ -47,6 +56,22 @@ void docDanhSachKhachHang(const char *tenFile) {
                   dskh[soLuongKhachHang].xuatChieu,
                   &dskh[soLuongKhachHang].tienPhaiTra) != EOF) {
         tinhTienPhaiTra(&dskh[soLuongKhachHang]); // Tính tiền cho khách hàng
+
+        // Cập nhật doanh thu cho từng phim
+        int found = 0;
+        for (int i = 0; i < soLuongPhim; i++) {
+            if (strcmp(dsPhim[i].tenPhim, dskh[soLuongKhachHang].tenPhim) == 0) {
+                dsPhim[i].tongDoanhThu += dskh[soLuongKhachHang].tienPhaiTra;
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            strcpy(dsPhim[soLuongPhim].tenPhim, dskh[soLuongKhachHang].tenPhim);
+            dsPhim[soLuongPhim].tongDoanhThu = dskh[soLuongKhachHang].tienPhaiTra;
+            soLuongPhim++;
+        }
+
         soLuongKhachHang++;
         if (soLuongKhachHang >= MAX_KHACHHANG) {
             printf("Danh sach khach hang da day.\n");
@@ -85,6 +110,18 @@ void xuatDanhSachKhachHang() {
     }
 }
 
+// Hàm xuất doanh thu theo từng phim
+void xuatDoanhThuTheoPhim() {
+    if (soLuongPhim == 0) {
+        printf("Danh sach phim rong.\n");
+    } else {
+        for (int i = 0; i < soLuongPhim; i++) {
+            printf("\nPhim: %s\n", dsPhim[i].tenPhim);
+            printf("Tong Doanh Thu: %d VND\n", dsPhim[i].tongDoanhThu);
+        }
+    }
+}
+
 // Hàm chính
 int main() {
     int luaChon;
@@ -95,8 +132,9 @@ int main() {
         printf("1. Doc danh sach khach hang tu file\n");
         printf("2. Xem danh sach khach hang\n");
         printf("3. Xem tong doanh thu\n");
-        printf("4. Thoat\n");
-        printf("Chon tuyen (1-4): ");
+        printf("4. Xem doanh thu theo tung phim\n");
+        printf("5. Thoat\n");
+        printf("Chon tuyen (1-5): ");
         scanf("%d", &luaChon);
 
         // Xóa ký tự newline còn lại
@@ -116,13 +154,16 @@ int main() {
                 printf("Tong doanh thu: %d VND\n", tinhTongDoanhThu());
                 break;
             case 4:
+                xuatDoanhThuTheoPhim();
+                break;
+            case 5:
                 printf("Thoat chuong trinh.\n");
                 break;
             default:
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 4);
+    } while (luaChon != 5);
 
     return 0;
 }

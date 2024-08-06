@@ -100,6 +100,19 @@ int demPhanTuChuaSo2(int m, int n, int **a) {
     return dem;
 }
 
+// Hàm xuất các phần tử cực tiểu của ma trận
+void xuatPhanTuCucTieu(int m, int n, int **a) {
+    for (int i = 0; i < m; i++) {
+        int min = a[i][0];
+        for (int j = 1; j < n; j++) {
+            if (a[i][j] < min) {
+                min = a[i][j];
+            }
+        }
+        printf("Phan tu cuc tieu cua hang %d: %d\n", i + 1, min);
+    }
+}
+
 // Hàm chính với menu
 int main() {
     int **a = NULL;
@@ -114,8 +127,9 @@ int main() {
         printf("3. Xuat cac cot chua toan so le\n");
         printf("4. Tim phan tu lon nhat tren bien ma tran\n");
         printf("5. Dem so phan tu co chu so 2\n");
-        printf("6. Thoat\n");
-        printf("Chon tuyen (1-6): ");
+        printf("6. Xuat cac phan tu cuc tieu\n");
+        printf("7. Thoat\n");
+        printf("Chon tuyen (1-7): ");
         scanf("%d", &luaChon);
 
         switch (luaChon) {
@@ -179,6 +193,14 @@ int main() {
                 break;
 
             case 6:
+                if (a == NULL) {
+                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                } else {
+                    xuatPhanTuCucTieu(m, n, a);
+                }
+                break;
+
+            case 7:
                 // Giải phóng bộ nhớ nếu ma trận đã được cấp phát
                 if (a != NULL) {
                     for (int i = 0; i < m; i++) {
@@ -193,7 +215,7 @@ int main() {
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 6);
+    } while (luaChon != 7);
 
     return 0;
 }

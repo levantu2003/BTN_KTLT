@@ -24,25 +24,80 @@ void xuatMaTran(int m, int n, int **a) {
 }
 
 // Hàm xuất các cột chỉ chứa số lẻ
-void xuatCotChiChuaSoLe(int m, int n, int **a) {
-    printf("Cac cot chi chua so le:\n");
-
+void xuatCotSoLe(int m, int n, int **a) {
     for (int j = 0; j < n; j++) {
-        int allOdd = 1; // Biến kiểm tra cột này có tất cả số lẻ không
+        int allOdd = 1; // Biến kiểm tra nếu tất cả các phần tử trong cột là số lẻ
         for (int i = 0; i < m; i++) {
-            if (a[i][j] % 2 == 0) {
-                allOdd = 0; // Có ít nhất một số chẵn trong cột
+            if (a[i][j] % 2 == 0) { // Nếu có ít nhất một số chẵn
+                allOdd = 0;
                 break;
             }
         }
         if (allOdd) {
-            printf("Cot %d: ", j + 1);
+            printf("Cot %d chua toan so le:\n", j + 1);
             for (int i = 0; i < m; i++) {
                 printf("%4d ", a[i][j]);
             }
             printf("\n");
         }
     }
+}
+
+// Hàm tìm phần tử lớn nhất trên biên của ma trận
+int timMaxTrenBien(int m, int n, int **a) {
+    int max = a[0][0];
+
+    // Kiểm tra hàng đầu tiên
+    for (int j = 0; j < n; j++) {
+        if (a[0][j] > max) max = a[0][j];
+    }
+
+    // Kiểm tra hàng cuối cùng
+    if (m > 1) { // Đảm bảo có nhiều hơn một hàng
+        for (int j = 0; j < n; j++) {
+            if (a[m-1][j] > max) max = a[m-1][j];
+        }
+    }
+
+    // Kiểm tra cột đầu tiên
+    for (int i = 1; i < m-1; i++) { // Đảm bảo không lặp lại các phần tử ở hàng đầu tiên và hàng cuối cùng
+        if (a[i][0] > max) max = a[i][0];
+    }
+
+    // Kiểm tra cột cuối cùng
+    if (n > 1) { // Đảm bảo có nhiều hơn một cột
+        for (int i = 1; i < m-1; i++) { // Đảm bảo không lặp lại các phần tử ở hàng đầu tiên và hàng cuối cùng
+            if (a[i][n-1] > max) max = a[i][n-1];
+        }
+    }
+
+    return max;
+}
+
+// Hàm kiểm tra xem số có chứa chữ số 2 không
+int coChuaSo2(int so) {
+    char buffer[12];
+    snprintf(buffer, sizeof(buffer), "%d", so); // Chuyển số thành chuỗi
+
+    for (int i = 0; buffer[i] != '\0'; i++) {
+        if (buffer[i] == '2') {
+            return 1; // Có chứa chữ số 2
+        }
+    }
+    return 0; // Không chứa chữ số 2
+}
+
+// Hàm đếm số lượng phần tử có chữ số 2 trong ma trận
+int demPhanTuChuaSo2(int m, int n, int **a) {
+    int dem = 0;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (coChuaSo2(a[i][j])) {
+                dem++;
+            }
+        }
+    }
+    return dem;
 }
 
 // Hàm chính với menu
@@ -56,9 +111,11 @@ int main() {
         printf("\n===== MENU =====\n");
         printf("1. Tao ma tran ngau nhien\n");
         printf("2. Xuat ma tran\n");
-        printf("3. Xuat cac cot chi chua so le\n");
-        printf("4. Thoat\n");
-        printf("Chon tuyen (1-4): ");
+        printf("3. Xuat cac cot chua toan so le\n");
+        printf("4. Tim phan tu lon nhat tren bien ma tran\n");
+        printf("5. Dem so phan tu co chu so 2\n");
+        printf("6. Thoat\n");
+        printf("Chon tuyen (1-6): ");
         scanf("%d", &luaChon);
 
         switch (luaChon) {
@@ -99,11 +156,29 @@ int main() {
                 if (a == NULL) {
                     printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
                 } else {
-                    xuatCotChiChuaSoLe(m, n, a);
+                    xuatCotSoLe(m, n, a);
                 }
                 break;
 
             case 4:
+                if (a == NULL) {
+                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                } else {
+                    int maxBien = timMaxTrenBien(m, n, a);
+                    printf("Phan tu lon nhat tren bien ma tran la: %d\n", maxBien);
+                }
+                break;
+
+            case 5:
+                if (a == NULL) {
+                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                } else {
+                    int dem = demPhanTuChuaSo2(m, n, a);
+                    printf("So luong phan tu co chua chu so 2: %d\n", dem);
+                }
+                break;
+
+            case 6:
                 // Giải phóng bộ nhớ nếu ma trận đã được cấp phát
                 if (a != NULL) {
                     for (int i = 0; i < m; i++) {
@@ -118,7 +193,7 @@ int main() {
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 4);
+    } while (luaChon != 6);
 
     return 0;
 }

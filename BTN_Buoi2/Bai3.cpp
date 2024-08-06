@@ -147,6 +147,23 @@ void xuatKhachHangTheoPhongVaXuat(const char *phongChieu, const char *xuatChieu)
     }
 }
 
+// Hàm sắp xếp danh sách khách hàng theo số tiền phải trả bằng thuật toán Selection Sort
+void selectionSortKhachHang() {
+    for (int i = 0; i < soLuongKhachHang - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < soLuongKhachHang; j++) {
+            if (dskh[j].tienPhaiTra < dskh[minIndex].tienPhaiTra) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            KhachHang temp = dskh[i];
+            dskh[i] = dskh[minIndex];
+            dskh[minIndex] = temp;
+        }
+    }
+}
+
 // Hàm chính
 int main() {
     int luaChon;
@@ -161,8 +178,9 @@ int main() {
         printf("3. Xem tong doanh thu\n");
         printf("4. Xem doanh thu theo tung phim\n");
         printf("5. Xem thong tin khach hang theo phong chieu va xuat chieu\n");
-        printf("6. Thoat\n");
-        printf("Chon tuyen (1-6): ");
+        printf("6. Sap xep danh sach khach hang theo so tien phai tra\n");
+        printf("7. Thoat\n");
+        printf("Chon tuyen (1-7): ");
         scanf("%d", &luaChon);
 
         // Xóa ký tự newline còn lại
@@ -194,13 +212,18 @@ int main() {
                 xuatKhachHangTheoPhongVaXuat(phongChieu, xuatChieu);
                 break;
             case 6:
+                selectionSortKhachHang();
+                printf("Danh sach khach hang sau khi sap xep:\n");
+                xuatDanhSachKhachHang();
+                break;
+            case 7:
                 printf("Thoat chuong trinh.\n");
                 break;
             default:
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 6);
+    } while (luaChon != 7);
 
     return 0;
 }

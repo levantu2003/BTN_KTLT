@@ -222,6 +222,23 @@ int kiemTraZiczac(int m, int n, int **a) {
     return 1; // Giảm dần theo ziczac
 }
 
+// Hàm liệt kê các chỉ số các dòng chứa toàn giá trị chẵn
+void lietKeDongChan(int m, int n, int **a) {
+    printf("Cac dong chua toan gia tri chan:\n");
+    for (int i = 0; i < m; i++) {
+        int allEven = 1; // Biến kiểm tra nếu tất cả các phần tử trong dòng là số chẵn
+        for (int j = 0; j < n; j++) {
+            if (a[i][j] % 2 != 0) { // Nếu có ít nhất một số lẻ
+                allEven = 0;
+                break;
+            }
+        }
+        if (allEven) {
+            printf("Dong %d\n", i + 1);
+        }
+    }
+}
+
 int main() {
     int luaChon;
     int m, n, min, max;
@@ -238,8 +255,9 @@ int main() {
         printf("7. Sap xep ma tran hang le giam dan, hang chan tang dan\n");
         printf("8. Sap xep ma tran cot le giam dan, cot chan tang dan\n");
         printf("9. Kiem tra ma tran co giam dan ziczac theo cot va dong\n");
-        printf("10. Thoat\n");
-        printf("Chon tuyen (1-10): ");
+        printf("10. Liet ke cac dong chua toan gia tri chan\n");
+        printf("11. Thoat\n");
+        printf("Chon tuyen (1-11): ");
         scanf("%d", &luaChon);
 
         switch (luaChon) {
@@ -342,6 +360,14 @@ int main() {
                 break;
 
             case 10:
+                if (a == NULL) {
+                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                } else {
+                    lietKeDongChan(m, n, a);
+                }
+                break;
+
+            case 11:
                 // Giải phóng bộ nhớ nếu ma trận đã được cấp phát
                 if (a != NULL) {
                     for (int i = 0; i < m; i++) {
@@ -356,7 +382,7 @@ int main() {
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 10);
+    } while (luaChon != 11);
 
     return 0;
 }

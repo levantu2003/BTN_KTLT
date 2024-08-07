@@ -198,7 +198,7 @@ int kiemTraZiczac(int m, int n, int **a) {
                 }
             } else { // Hàng lẻ
                 if (a[i][j] < a[i][j-1]) {
-                    return 0; // Không giảm dần
+                    return 0; // Không tăng dần
                 }
             }
         }
@@ -213,30 +213,41 @@ int kiemTraZiczac(int m, int n, int **a) {
                 }
             } else { // Cột lẻ
                 if (a[i][j] < a[i-1][j]) {
-                    return 0; // Không giảm dần
+                    return 0; // Không tăng dần
                 }
             }
         }
     }
 
-    return 1; // Giảm dần theo ziczac
+    return 1; // Ma trận giảm dần ziczac
 }
 
-// Hàm liệt kê các chỉ số các dòng chứa toàn giá trị chẵn
-void lietKeDongChan(int m, int n, int **a) {
-    printf("Cac dong chua toan gia tri chan:\n");
-    for (int i = 0; i < m; i++) {
-        int allEven = 1; // Biến kiểm tra nếu tất cả các phần tử trong dòng là số chẵn
-        for (int j = 0; j < n; j++) {
-            if (a[i][j] % 2 != 0) { // Nếu có ít nhất một số lẻ
-                allEven = 0;
-                break;
-            }
+// Hàm kiểm tra xem một dòng có được sắp xếp giảm dần không
+int kiemTraGiamDan(int n, int *dong) {
+    for (int j = 1; j < n; j++) {
+        if (dong[j] > dong[j-1]) {
+            return 0; // Không giảm dần
         }
-        if (allEven) {
+    }
+    return 1; // Giảm dần
+}
+
+// Hàm liệt kê các chỉ số các dòng chứa toàn giá trị giảm dần
+void lietKeDongGiamDan(int m, int n, int **a) {
+    printf("Cac dong chua toan gia tri giam dan:\n");
+    for (int i = 0; i < m; i++) {
+        if (kiemTraGiamDan(n, a[i])) {
             printf("Dong %d\n", i + 1);
         }
     }
+}
+
+// Hàm giải phóng bộ nhớ của ma trận
+void giaiPhongMaTran(int m, int **a) {
+    for (int i = 0; i < m; i++) {
+        free(a[i]);
+    }
+    free(a);
 }
 
 int main() {
@@ -256,8 +267,9 @@ int main() {
         printf("8. Sap xep ma tran cot le giam dan, cot chan tang dan\n");
         printf("9. Kiem tra ma tran co giam dan ziczac theo cot va dong\n");
         printf("10. Liet ke cac dong chua toan gia tri chan\n");
-        printf("11. Thoat\n");
-        printf("Chon tuyen (1-11): ");
+        printf("11. Liet ke cac dong chua toan gia tri giam dan\n");
+        printf("12. Thoat\n");
+        printf("Chon tuyen (1-12): ");
         scanf("%d", &luaChon);
 
         switch (luaChon) {
@@ -296,7 +308,7 @@ int main() {
 
             case 3:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
                     xuatCotSoLe(m, n, a);
                 }
@@ -304,25 +316,25 @@ int main() {
 
             case 4:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
-                    int maxBien = timMaxTrenBien(m, n, a);
-                    printf("Phan tu lon nhat tren bien ma tran la: %d\n", maxBien);
+                    int max = timMaxTrenBien(m, n, a);
+                    printf("Phan tu lon nhat tren bien ma tran la: %d\n", max);
                 }
                 break;
 
             case 5:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
                     int dem = demPhanTuChuaSo2(m, n, a);
-                    printf("So phan tu co chu so 2 la: %d\n", dem);
+                    printf("So luong phan tu co chu so 2: %d\n", dem);
                 }
                 break;
 
             case 6:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
                     xuatPhanTuCucTieu(m, n, a);
                 }
@@ -330,50 +342,66 @@ int main() {
 
             case 7:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
                     sapXepMaTran(m, n, a);
-                    printf("Ma tran da duoc sap xep.\n");
+                    printf("Ma tran da duoc sap xep: hang le giam dan, hang chan tang dan.\n");
                 }
                 break;
 
             case 8:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
                     sapXepCotTheoYeuCau(m, n, a);
-                    printf("Ma tran da duoc sap xep.\n");
+                    printf("Ma tran da duoc sap xep: cot le giam dan, cot chan tang dan.\n");
                 }
                 break;
 
             case 9:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
-                    int isZiczac = kiemTraZiczac(m, n, a);
-                    if (isZiczac) {
-                        printf("Ma tran giam dan theo ziczac theo cot va dong.\n");
+                    if (kiemTraZiczac(m, n, a)) {
+                        printf("Ma tran co giam dan ziczac theo cot va dong.\n");
                     } else {
-                        printf("Ma tran khong giam dan theo ziczac theo cot va dong.\n");
+                        printf("Ma tran khong giam dan ziczac theo cot va dong.\n");
                     }
                 }
                 break;
 
             case 10:
                 if (a == NULL) {
-                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                    printf("Ma tran chua duoc tao.\n");
                 } else {
-                    lietKeDongChan(m, n, a);
+                    // Liệt kê các dòng chứa toàn giá trị chẵn
+                    printf("Cac dong chua toan gia tri chan:\n");
+                    for (int i = 0; i < m; i++) {
+                        int allEven = 1; // Biến kiểm tra nếu tất cả các phần tử trong dòng là số chẵn
+                        for (int j = 0; j < n; j++) {
+                            if (a[i][j] % 2 != 0) { // Nếu có ít nhất một số lẻ
+                                allEven = 0;
+                                break;
+                            }
+                        }
+                        if (allEven) {
+                            printf("Dong %d\n", i + 1);
+                        }
+                    }
                 }
                 break;
 
             case 11:
-                // Giải phóng bộ nhớ nếu ma trận đã được cấp phát
+                if (a == NULL) {
+                    printf("Ma tran chua duoc tao.\n");
+                } else {
+                    lietKeDongGiamDan(m, n, a);
+                }
+                break;
+
+            case 12:
                 if (a != NULL) {
-                    for (int i = 0; i < m; i++) {
-                        free(a[i]);
-                    }
-                    free(a);
+                    giaiPhongMaTran(m, a);
                 }
                 printf("Thoat chuong trinh.\n");
                 break;
@@ -382,7 +410,7 @@ int main() {
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 11);
+    } while (luaChon != 12);
 
     return 0;
 }

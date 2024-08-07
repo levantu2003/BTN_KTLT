@@ -139,6 +139,32 @@ void sapXepGiamDan(int n, int *hang) {
     }
 }
 
+// Hàm sắp xếp một cột tăng dần
+void sapXepCotTangDan(int m, int **a, int cot) {
+    for (int i = 0; i < m - 1; i++) {
+        for (int j = 0; j < m - i - 1; j++) {
+            if (a[j][cot] > a[j + 1][cot]) {
+                int temp = a[j][cot];
+                a[j][cot] = a[j + 1][cot];
+                a[j + 1][cot] = temp;
+            }
+        }
+    }
+}
+
+// Hàm sắp xếp một cột giảm dần
+void sapXepCotGiamDan(int m, int **a, int cot) {
+    for (int i = 0; i < m - 1; i++) {
+        for (int j = 0; j < m - i - 1; j++) {
+            if (a[j][cot] < a[j + 1][cot]) {
+                int temp = a[j][cot];
+                a[j][cot] = a[j + 1][cot];
+                a[j + 1][cot] = temp;
+            }
+        }
+    }
+}
+
 // Hàm sắp xếp ma trận theo yêu cầu
 void sapXepMaTran(int m, int n, int **a) {
     for (int i = 0; i < m; i++) {
@@ -146,6 +172,17 @@ void sapXepMaTran(int m, int n, int **a) {
             sapXepTangDan(n, a[i]);
         } else {
             sapXepGiamDan(n, a[i]);
+        }
+    }
+}
+
+// Hàm sắp xếp ma trận theo yêu cầu cột lẻ giảm dần, cột chẵn tăng dần
+void sapXepCotTheoYeuCau(int m, int n, int **a) {
+    for (int j = 0; j < n; j++) {
+        if (j % 2 == 0) {
+            sapXepCotTangDan(m, a, j);
+        } else {
+            sapXepCotGiamDan(m, a, j);
         }
     }
 }
@@ -165,9 +202,10 @@ int main() {
         printf("4. Tim phan tu lon nhat tren bien ma tran\n");
         printf("5. Dem so phan tu co chu so 2\n");
         printf("6. Xuat cac phan tu cuc tieu\n");
-        printf("7. Sap xep ma tran\n");
-        printf("8. Thoat\n");
-        printf("Chon tuyen (1-8): ");
+        printf("7. Sap xep ma tran hang le giam dan, hang chan tang dan\n");
+        printf("8. Sap xep ma tran cot le giam dan, cot chan tang dan\n");
+        printf("9. Thoat\n");
+        printf("Chon tuyen (1-9): ");
         scanf("%d", &luaChon);
 
         switch (luaChon) {
@@ -248,6 +286,15 @@ int main() {
                 break;
 
             case 8:
+                if (a == NULL) {
+                    printf("Ma tran chua duoc tao. Vui long chon lua chon 1 de tao ma tran truoc.\n");
+                } else {
+                    sapXepCotTheoYeuCau(m, n, a);
+                    printf("Ma tran da duoc sap xep.\n");
+                }
+                break;
+
+            case 9:
                 // Giải phóng bộ nhớ nếu ma trận đã được cấp phát
                 if (a != NULL) {
                     for (int i = 0; i < m; i++) {
@@ -262,7 +309,7 @@ int main() {
                 printf("Lua chon khong hop le. Vui long chon lai.\n");
                 break;
         }
-    } while (luaChon != 8);
+    } while (luaChon != 9);
 
     return 0;
 }
